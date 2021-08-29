@@ -34,14 +34,16 @@ parser.add_argument('--no-loss-plot', action='store_true', help='Don\'t plot los
 
 args = parser.parse_args()
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
+
 if args.mode == 'render':
     if (args.content_image is None) or (args.model_path is None):
         print('Both content image path and style model path should be provided in rendering mode.')
         exit()
     
     cimage = Image.open(args.content_image)
-    content_image = torchvision.transforms.ToTensor()(cimage).unsqueeze(0).cuda()
-    gen = Generator().cuda()
+    content_image = torchvision.transforms.ToTensor()(cimage).unsqueeze(0).to(device)
+    gen = Generator().to(device)
     gen.load_state_dict(torch.load(args.model_path))
     out_image = Image.fromarray(torch.clamp((gen(content_image).cpu().detach().squeeze(0).permute(1,2,0) + 1) / 2 * 255, min=0, max=255).type(torch.uint8).numpy())
     
@@ -124,9 +126,9 @@ def prepare_style_batch(style_image, batch_size):
 image = Image.open(args.style_image)
 simage = (np.array(image) / 255.0 - 0.5) * 2
 
-gen = Generator().cuda()
-disc = Discriminator(T, disc_kernel_size).cuda()
-vgg = Vgg16Partial().cuda()
+gen = Generator().to(device)
+disc = Discriminator(T, disc_kernel_size).to(device)
+vgg = Vgg16Partial().to(device)
 
 g_optimizer = torch.optim.RMSprop(gen.parameters(), lr=5e-4, alpha=0.9)
 d_optimizer = torch.optim.RMSprop(disc.parameters(), lr=5e-4, alpha=0.9)
@@ -139,9 +141,9 @@ vgg_transform = torchvision.transforms.Normalize((0.485, 0.456, 0.406), (0.229, 
 for epoch in range(EPOCHS):
   np.random.shuffle(paths)
   for batch_num in range(BATCHES):    
-    style_images = prepare_style_batch(simage, BATCH_SIZE).cuda()
-    content_images = prepare_content_batch(paths[batch_num*BATCH_SIZE:batch_num*BATCH_SIZE+BATCH_SIZE]).cuda()
-    generator_images = gen(content_images).cuda()
+    style_images = prepare_style_batch(simage, BATCH_SIZE).to(device)
+    content_images = prepare_content_batch(paths[batch_num*BATCH_SIZE:batch_num*BATCH_SIZE+BATCH_SIZE]).to(device)
+    generator_images = gen(content_images).to(device)
      
     
     d_optimizer.zero_grad()
@@ -156,7 +158,7 @@ for epoch in range(EPOCHS):
     for _ in range(2):
         g_optimizer.zero_grad()
         
-        generator_images = gen(content_images).cuda()
+        generator_images = gen(content_images).to(device)
         
         d_fake = disc(generator_images)
         mean_d_fake = torch.mean(d_fake)
