@@ -5,7 +5,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 from PIL import Image
 from os import listdir
-from collections import OrderedDict
 import argparse
 
 from p2gan_models import Generator, Discriminator, Vgg16Partial
@@ -21,14 +20,14 @@ parser.add_argument('-mp', '--model-path', type=str, help='Path to trained model
 parser.add_argument('--no-plot', action='store_true', help='Don\'t plot style transer result when finished (used in rendering mode) (optional)')
 parser.add_argument('-o', '--save-output', metavar='FILENAME', type=str, help='Save style transer result to file (used in rendering mode) (optional)')
 
-parser.add_argument('-ps', '--patch-size', choices=[9, 16], type=int, default=9, help='Discriminator patch size (used in training mode)')
+parser.add_argument('-ps', '--patch-size', choices=[9, 16], type=int, default=9, help='Discriminator patch size (used in training mode) (default: 9)')
 parser.add_argument('-s', '--style-image', type=str, help='Path to style image (used in training mode)')
 parser.add_argument('-sm', '--save-model-path', metavar='FILENAME', type=str, help='Path where to save model (used in training mode)')
 parser.add_argument('-dp', '--dataset-path', type=str, help='Path to training dataset (used in training mode)')
-parser.add_argument('--lambda', dest='lbd', type=float, default=1.e-3, help='Content loss weight parameter (used in training mode)')
-parser.add_argument('--epochs', type=int, default=3, help='Training epochs (used in training mode)')
-parser.add_argument('--batch_size', type=int, default=16, help='Batch size for training (used in training mode)')
-parser.add_argument('--print-every', metavar='N', type=int, default=100, help='Print current losses on every N iterations (used in training mode)')
+parser.add_argument('--lambda', dest='lbd', type=float, default=1.e-3, help='Content loss weight parameter (used in training mode) (default: 1.0e-3)')
+parser.add_argument('--epochs', type=int, default=3, help='Training epochs (used in training mode) (default: 3)')
+parser.add_argument('--batch_size', type=int, default=16, help='Batch size for training (used in training mode) (default: 16)')
+parser.add_argument('--print-every', metavar='N', type=int, default=100, help='Print current losses on every N iterations (used in training mode) (default: 100)')
 parser.add_argument('--no-loss-plot', action='store_true', help='Don\'t plot losses when training is finished (used in training mode) (optional)')
 
 
