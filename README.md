@@ -27,3 +27,10 @@ $ python p2gan.py -m render -c images/content/tubingen_256.jpg -mp trained_model
 ```
 $ python p2gan.py -m train -s images/style/starry_night.jpg -sm trained_models/starry_night.pth -dp VOCdevkit/VOC2007/JPEGImages/ --lambda 0.005
 ```
+
+## Литература
+1. Gatys, L. A., Ecker A. S. & Bethge M. (2015). A Neural Algorithm of Artistic Style. arXiv. 10.1167/16.12.326.
+2. Gatys, L. A., Ecker A. S. & Bethge M. (2016). Image Style Transfer Using Convolutional Neural Networks. 2414-2423. 10.1109/CVPR.2016.265.
+3. Authors' implementation of Image Style Transfer Using Convolutional Neural Networks paper. online at: https://github.com/leongatys/PytorchNeuralStyleTransfer
+4. Zheng, Z. & Liu, J. (2020). P²-GAN: Efficient Style Transfer Using Single Style Image. arXiv.
+5. Authors' implementation of P²-GAN: Efficient Style Transfer Using Single Style Image paper. online at: https://github.com/i-evi/p2gan
